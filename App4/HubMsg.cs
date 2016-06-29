@@ -13,8 +13,7 @@ namespace App4
 {
     class HubMsg
     {
-        public static CancellationTokenSource _receiveTokenSource2;
-        public static Task _AutoWater;
+        //public static CancellationTokenSource _receiveTokenSource2;
         Queue<object> _buffer;
         public HubMsg(Queue<object> buffer)
         {
@@ -45,7 +44,7 @@ namespace App4
                         {
                             var msg = new Message(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(d)));
                             await deviceClient.SendEventAsync(msg);
-                            InitGpio._HubStatePin.Write(GpioPinValue.High);
+                            //InitGpio._HubStatePin.Write(GpioPinValue.High);
                         }
                     }
                     catch (Exception)
@@ -75,17 +74,6 @@ namespace App4
                                 break;
                             case "-1":
                                 InitGpio._relePin.Write(GpioPinValue.Low);
-                                break;
-                            case "4":
-                                _receiveTokenSource2 = new CancellationTokenSource();
-                                _AutoWater = WaterControl.AutoWater(_receiveTokenSource2.Token);
-                                break;
-                            case "-4":
-
-                                if (_receiveTokenSource2 != null)
-                                {
-                                    _receiveTokenSource2.Cancel();
-                                }
                                 break;
                             default:
                                 break;

@@ -199,11 +199,11 @@ namespace App4
             }
             else
             {
-                await MainPage.blink(InitGpio._HubStatePin, 5);
+                await MainPage.blink(InitGpio._BluetoothPin, 5);
                 if (MainPage._receiveTokenSource != null)
                 {
                     MainPage._receiveTokenSource.Cancel();
-                    InitGpio._HubStatePin.Write(GpioPinValue.Low);
+                    InitGpio._BluetoothPin.Write(GpioPinValue.Low);
                 }
                 ConnectDevice_Click();
             }
