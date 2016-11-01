@@ -8,32 +8,45 @@ using Windows.Devices.Bluetooth.Rfcomm;
 using Windows.Devices.Enumeration;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
-using Newtonsoft.Json;
 using Windows.Devices.Gpio;
+using App4;
 
-namespace App4
+namespace PuppyCareApp
 {
     class Bluetooth
     {
         private static StreamSocket _socket;
-        // private DataWriter dataWriterObject;
         private static DataReader dataReaderObject;
         public static ObservableCollection<PairedDeviceInfo> _pairedDevices;
         private static RfcommDeviceService _service;
         private static CancellationTokenSource ReadCancellationTokenSource;
-        public static string result;
-        public static string lat = "";
-        public static string lon = "";
+        public static string receivedResult;
+        public static string latitude = "";
+        public static string longitude = "";
         public static string temperature = "";
+        public static string pulse = "";
         public static bool success = true;
+
+
+        public class PairedDeviceInfo
+        {
+            internal PairedDeviceInfo(DeviceInformation deviceInfo)
+            {
+                this.DeviceInfo = deviceInfo;
+                this.ID = this.DeviceInfo.Id;
+                this.Name = this.DeviceInfo.Name;
+            }
+            public string Name { get; private set; }
+            public string ID { get; private set; }
+            public DeviceInformation DeviceInfo { get; private set; }
+        }
+
 
         public static async void InitializeRfcommDeviceService()
         {
             try
             {
                 DeviceInformationCollection DeviceInfoCollection = await DeviceInformation.FindAllAsync(RfcommDeviceService.GetDeviceSelector(RfcommServiceId.SerialPort));
-
-
                 var numDevices = DeviceInfoCollection.Count();
 
                 // By clearing the backing data, we are effectively clearing the ListBox
@@ -42,8 +55,6 @@ namespace App4
 
                 if (numDevices == 0)
                 {
-                    //MessageDialog md = new MessageDialog("No paired devices found", "Title");
-                    //await md.ShowAsync();
                     System.Diagnostics.Debug.WriteLine("InitializeRfcommDeviceService: No paired devices found.");
                 }
                 else
@@ -55,8 +66,7 @@ namespace App4
                     }
                 }
                 Debug.WriteLine(_pairedDevices[0].Name);
-                ConnectDevice_Click();
-                //PairedDevices.Source = _pairedDevices;
+                ConnectDevice();
             }
             catch (Exception ex)
             {
@@ -64,17 +74,16 @@ namespace App4
             }
         }
 
-        async private static void ConnectDevice_Click()
+        async private static void ConnectDevice()
         {
             //Revision: No need to requery for Device Information as we alraedy have it:
             DeviceInformation DeviceInfo; // = await DeviceInformation.CreateFromIdAsync(this.TxtBlock_SelectedID.Text);
             PairedDeviceInfo pairedDevice = _pairedDevices[0];
             DeviceInfo = pairedDevice.DeviceInfo;
-            
-           
             try
             {
-                while(_service== null){
+                while (_service == null)
+                {
                     _service = await RfcommDeviceService.FromIdAsync(DeviceInfo.Id);
                 }
 
@@ -87,7 +96,7 @@ namespace App4
                 _socket = new StreamSocket();
                 try
                 {
-                   // Note: If either parameter is null or empty, the call will throw an exception
+                    // Note: If either parameter is null or empty, the call will throw an exception
                     await _socket.ConnectAsync(_service.ConnectionHostName, _service.ConnectionServiceName);
                     success = true;
                     MainPage.sendreceive();
@@ -95,7 +104,7 @@ namespace App4
                 catch (Exception ex)
                 {
                     success = false;
-                    ConnectDevice_Click();
+                    ConnectDevice();
                     System.Diagnostics.Debug.WriteLine("Connect:" + ex.Message);
                 }
                 // If the connection was successful, the RemoteAddress field will be populated
@@ -156,7 +165,6 @@ namespace App4
         private static async Task ReadAsync(CancellationToken cancellationToken)
         {
             Task<UInt32> loadAsyncTask;
-
             uint ReadBufferLength = 2048;
 
             // If task cancellation was requested, comply 
@@ -164,8 +172,6 @@ namespace App4
 
             // Set InputStreamOptions to complete the asynchronous read operation when one or more bytes is available 
             dataReaderObject.InputStreamOptions = InputStreamOptions.Partial;
-
-            //dataReaderObject. 
 
             // Create a task object to wait for data on the serialPort.InputStream 
             loadAsyncTask = dataReaderObject.LoadAsync(ReadBufferLength).AsTask(cancellationToken);
@@ -177,25 +183,25 @@ namespace App4
                 try
                 {
                     string recvdtxt = dataReaderObject.ReadString(bytesRead);
-                    result += recvdtxt;
-                    string[] last;
-
+                    receivedResult += recvdtxt;
+                    string[] lastSymb;
 
                     if (recvdtxt.EndsWith("\r\n"))
                     {
                         //System.Diagnostics.Debug.WriteLine(result); 
-                        last = result.Split(',');
-                        lat = last[0];
-                        lon = last[1];
-                        temperature = last[2].Split(';')[0];
-                        result = "";
+                        lastSymb = receivedResult.Split(',');
+                        latitude = lastSymb[0];
+                        longitude = lastSymb[1];
+                        temperature = lastSymb[2];
+                        pulse = lastSymb[3].Split(';')[0]; ;
+                        receivedResult = "";
                     }
                 }
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine("ReadAsync: " + ex.Message);
                 }
-                
+
             }
             else
             {
@@ -205,23 +211,10 @@ namespace App4
                     MainPage._receiveTokenSource.Cancel();
                     InitGpio._BluetoothPin.Write(GpioPinValue.Low);
                 }
-                ConnectDevice_Click();
+                ConnectDevice();
             }
         }
-
-        public class PairedDeviceInfo
-        {
-            internal PairedDeviceInfo(DeviceInformation deviceInfo)
-            {
-                this.DeviceInfo = deviceInfo;
-                this.ID = this.DeviceInfo.Id;
-                this.Name = this.DeviceInfo.Name;
-            }
-
-            public string Name { get; private set; }
-            public string ID { get; private set; }
-            public DeviceInformation DeviceInfo { get; private set; }
-        }
-    
+    }
 }
-}
+
+

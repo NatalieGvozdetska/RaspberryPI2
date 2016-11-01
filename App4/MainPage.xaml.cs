@@ -24,6 +24,7 @@ namespace App4
             InitGpio.Init();
             InitializeComponent();
         }
+
         public static void sendreceive()
         {
             _receiveTokenSource = new CancellationTokenSource();
@@ -65,5 +66,6 @@ namespace App4
                 k++;
             }
         }
+
     }
 }
