@@ -100,7 +100,7 @@
     </Compile>
     <Compile Include="Bluetooth.cs" />
     <Compile Include="Data.cs" />
-    <Compile Include="HubMsg.cs" />
+    <Compile Include="IoTHub.cs" />
     <Compile Include="InitGpio.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using System.Collections.Generic;
 
-namespace App4
+namespace PuppyCareApp
 {
     public sealed partial class MainPage
     {
@@ -28,10 +28,10 @@ namespace App4
         {
             _receiveTokenSource = new CancellationTokenSource();
             _buffer = new Queue<object>();
-            HubMsg hub = new HubMsg(_buffer);
+            IoTHub hub = new IoTHub(_buffer);
              _getSendingTask = GetDate(_receiveTokenSource.Token);
             _receiveTask = hub.Receive(_receiveTokenSource.Token);
-            _sendTask = hub.Sending(_receiveTokenSource.Token);
+            _sendTask = hub.Send(_receiveTokenSource.Token);
         }
 
         public static async Task GetDate(CancellationToken token)

@@ -11,7 +11,7 @@ using Windows.Storage.Streams;
 using Newtonsoft.Json;
 using Windows.Devices.Gpio;
 
-namespace App4
+namespace PuppyCareApp
 {
     class Bluetooth
     {
