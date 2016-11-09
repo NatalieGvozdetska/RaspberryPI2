@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App4", "App4\App4.csproj", "{A384B819-C4EC-4777-85B7-795378CE2765}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PuppyCareApp", "App4\PuppyCareApp.csproj", "{A384B819-C4EC-4777-85B7-795378CE2765}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

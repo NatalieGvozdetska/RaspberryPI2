@@ -29,22 +29,22 @@ namespace PuppyCareApp
             _receiveTokenSource = new CancellationTokenSource();
             _buffer = new Queue<object>();
             IoTHub hub = new IoTHub(_buffer);
-             _getSendingTask = GetDate(_receiveTokenSource.Token);
+             _getSendingTask = FormJSONobj2send(_receiveTokenSource.Token);
             _receiveTask = hub.Receive(_receiveTokenSource.Token);
             _sendTask = hub.Send(_receiveTokenSource.Token);
         }
 
-        public static async Task GetDate(CancellationToken token)
+        public static async Task FormJSONobj2send(CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
                 DateTime date = DateTime.Now;
-                Data d = new Data();
-                d.valueTemp = Bluetooth.temperature;
-                d.Lat = Bluetooth.lat;
-                d.Lon = Bluetooth.lon; 
-                d.valueDateTime = date.ToString();
-                d.valueID = DeviceID;
+                JSONobj d = new JSONobj();
+                d.temperature = Bluetooth.temperature;
+                d.latitude = Bluetooth.lat;
+                d.longitude = Bluetooth.lon; 
+                d.datetime = date.ToString();
+                d.deviceID = DeviceID;
                 lock (_buffer)
                     {
                         _buffer.Enqueue(d);

@@ -99,7 +99,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Bluetooth.cs" />
-    <Compile Include="Data.cs" />
+    <Compile Include="JSONobj.cs" />
     <Compile Include="IoTHub.cs" />
     <Compile Include="InitGpio.cs" />
     <Compile Include="MainPage.xaml.cs">
