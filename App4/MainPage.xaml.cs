@@ -41,8 +41,8 @@ namespace PuppyCareApp
                 DateTime date = DateTime.Now;
                 JSONobj d = new JSONobj();
                 d.temperature = Bluetooth.temperature;
-                d.latitude = Bluetooth.lat;
-                d.longitude = Bluetooth.lon; 
+                d.latitude = Bluetooth.latitude;
+                d.longitude = Bluetooth.longitude;
                 d.datetime = date.ToString();
                 d.deviceID = DeviceID;
                 lock (_buffer)
