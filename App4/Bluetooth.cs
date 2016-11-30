@@ -98,7 +98,7 @@ namespace PuppyCareApp
                     // Note: If either parameter is null or empty, the call will throw an exception
                     await _socket.ConnectAsync(_service.ConnectionHostName, _service.ConnectionServiceName);
                     success = true;
-                    MainPage.sendreceive();
+                    MainPage.SendReceiveStart();
                 }
                 catch (Exception ex)
                 {
@@ -204,7 +204,7 @@ namespace PuppyCareApp
             }
             else
             {
-                await MainPage.blink(InitGpio._BluetoothPin, 5);
+                await MainPage.CheckLEDBlink(InitGpio._BluetoothPin, 3);
                 if (MainPage._receiveTokenSource != null)
                 {
                     MainPage._receiveTokenSource.Cancel();
