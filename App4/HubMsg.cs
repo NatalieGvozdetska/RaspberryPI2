@@ -9,18 +9,28 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 
-namespace App4
+namespace PuppyCareApp
 {
     class HubMsg
     {
         //public static CancellationTokenSource _receiveTokenSource2;
         Queue<object> _buffer;
+
+        /// <summary>
+        /// Формирует буфер (очередь) для передачи данных в IoTHub 
+        /// </summary>
+        /// <param name="buffer">Объекты для передачи </param>
+
         public HubMsg(Queue<object> buffer)
         {
             _buffer = buffer;
         }
         public static DeviceClient deviceClient;
         public static string FirstDevice = "HostName=AVN-group.azure-devices.net;DeviceId=RaspberyData;SharedAccessKey=en9r0KNg4+zG15msYX/aFjtut4n0R+2fmi3iVU9GC+E=";
+
+        /// <summary>
+        /// Передает данные в IoTHub в отдельном потоке 
+        /// </summary>
 
         public async Task Sending(CancellationToken token)
         {
@@ -54,6 +64,10 @@ namespace App4
                 }
             
         }
+
+        /// <summary>
+        /// Принимает данные из IoTHub (асинхронно прослушивает на наличие событий (новых данных))
+        /// </summary>
 
         public async Task Receive(CancellationToken token)
         {

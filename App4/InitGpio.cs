@@ -10,7 +10,7 @@ using Windows.Devices.Gpio;
 using Windows.Devices.SerialCommunication;
 using Windows.Devices.Spi;
 
-namespace App4
+namespace PuppyCareApp
 {
     class InitGpio
     {

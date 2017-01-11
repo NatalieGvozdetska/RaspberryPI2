@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using System.Collections.Generic;
 
-namespace App4
+namespace PuppyCareApp
 {
     public sealed partial class MainPage
     {
@@ -24,6 +24,10 @@ namespace App4
             InitGpio.Init();
             InitializeComponent();
         }
+
+        /// <summary>
+        /// Инициализирует передачу и прием данных из IoTHub
+        /// </summary>
 
         public static void sendreceive()
         {
@@ -54,6 +58,12 @@ namespace App4
             }
         }
 
+        /// <summary>
+        /// Включает мигание сигнальной лампочки в зависимости от события
+        /// </summary>
+        /// <param name="pin">Указывает, какой именно лампочке мигать </param>
+        /// <param name="count">Количество миганий лампочки </param>
+        
         public static async Task blink(GpioPin pin,int count)
         {
             int k = 0;
