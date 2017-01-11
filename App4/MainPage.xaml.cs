@@ -22,6 +22,10 @@ namespace PuppyCareApp
             InitGpio.Init();
         }
 
+        /// <summary>
+        /// Инициализирует передачу и прием данных из IoTHub
+        /// </summary>
+
         public static void SendReceiveStart()
         {
             _receiveTokenSource = new CancellationTokenSource();
@@ -51,6 +55,12 @@ namespace PuppyCareApp
                 await Task.Delay(3000);
             }
         }
+
+        /// <summary>
+        /// Включает мигание сигнальной лампочки в зависимости от события
+        /// </summary>
+        /// <param name="pin">Указывает, какой именно лампочке мигать (номер GPIO Pin, к которому присоединена лампочка)</param>
+        /// <param name="count">Количество миганий лампочки </param>
 
         public static async Task CheckLEDBlink(GpioPin pin, int count)
         {

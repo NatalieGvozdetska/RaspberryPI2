@@ -18,11 +18,19 @@ namespace PuppyCareApp
         public static DeviceClient deviceClient;
         public static string deviceConnectionStr = "HostName=AVN-group.azure-devices.net;DeviceId=RaspberyData;SharedAccessKey=en9r0KNg4+zG15msYX/aFjtut4n0R+2fmi3iVU9GC+E=";
 
+        /// <summary>
+        /// Формирует буфер (очередь) для передачи данных в IoTHub 
+        /// </summary>
+        /// <param name="buffer">Объекты для передачи </param>
 
         public IoTHub(Queue<object> buffer)
         {
             _buffer = buffer;
         }
+
+        /// <summary>
+        /// Передает данные в IoTHub в отдельном потоке 
+        /// </summary>
 
         public async Task Send(CancellationToken token)
         {
@@ -55,6 +63,10 @@ namespace PuppyCareApp
             }
 
         }
+
+        /// <summary>
+        /// Принимает данные из IoTHub (фоновый процесс, постоянное прослушивание на наличие новых запросов на получение)
+        /// </summary>
 
         public async Task Receive(CancellationToken token)
         {

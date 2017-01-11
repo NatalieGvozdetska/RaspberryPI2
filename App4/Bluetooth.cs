@@ -10,6 +10,12 @@ using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using Windows.Devices.Gpio;
 
+/// <summary>
+/// Объекты класса Bluetooth могут быть использованы для приема и передачи данных
+/// </summary>
+/// <param name="dataReaderObject">Параметр для считывания данных</param>
+/// <param name="_pairedDevices">Список устройств в паре с RPi</param>
+
 namespace PuppyCareApp
 {
     class Bluetooth
@@ -40,6 +46,9 @@ namespace PuppyCareApp
             public DeviceInformation DeviceInfo { get; private set; }
         }
 
+        /// <summary>
+        /// Инициализирует найденное в зоне действия блютуз устройство, если с ним установлена пара
+        /// </summary>
 
         public static async void InitializeRfcommDeviceService()
         {
