@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using Windows.UI.Xaml.Controls;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
-using System.Collections.Generic;
 
 namespace PuppyCareApp
 {
-    public sealed partial class MainPage
+    public sealed partial class MainPage : Page
     {
         private static Queue<object> _buffer;
         private static Task _receiveTask;
@@ -14,15 +15,11 @@ namespace PuppyCareApp
         private static Task _getSendingTask;
         public static CancellationTokenSource _receiveTokenSource;
         private static string DeviceID = "RaspberryData";
-        private bool onof = false;
-        private int i = 0;
-
 
         public MainPage()
         {
-            //Initiailizing pins
+            this.InitializeComponent();
             InitGpio.Init();
-            InitializeComponent();
         }
 
         /// <summary>
@@ -33,27 +30,28 @@ namespace PuppyCareApp
         {
             _receiveTokenSource = new CancellationTokenSource();
             _buffer = new Queue<object>();
-            HubMsg hub = new HubMsg(_buffer);
-             _getSendingTask = GetDate(_receiveTokenSource.Token);
+            IoTHub hub = new IoTHub(_buffer);
+            _getSendingTask = FormObjectToSend(_receiveTokenSource.Token);
             _receiveTask = hub.Receive(_receiveTokenSource.Token);
-            _sendTask = hub.Sending(_receiveTokenSource.Token);
+            _sendTask = hub.Send(_receiveTokenSource.Token);
         }
 
-        public static async Task GetDate(CancellationToken token)
+        public static async Task FormObjectToSend(CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
                 DateTime date = DateTime.Now;
-                Data d = new Data();
-                d.valueTemp = Bluetooth.temperature;
-                d.Lat = Bluetooth.lat;
-                d.Lon = Bluetooth.lon; 
-                d.valueDateTime = date.ToString();
-                d.valueID = DeviceID;
+                JSONobj obj2send = new JSONobj();
+                obj2send.temperature = Bluetooth.temperature;
+                obj2send.pulse = Bluetooth.pulse;
+                obj2send.latitude = Bluetooth.latitude;
+                obj2send.longitude = Bluetooth.longitude;
+                obj2send.datetime = date.ToString();
+                obj2send.deviceID = DeviceID;
                 lock (_buffer)
-                    {
-                        _buffer.Enqueue(d);
-                    }
+                {
+                    _buffer.Enqueue(obj2send);
+                }
                 await Task.Delay(3000);
             }
         }
